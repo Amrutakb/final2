@@ -1,0 +1,40 @@
+.addcourse{
+    width: 60%;
+    background-color: rgb(231, 226, 219);
+    box-shadow: 1px 1px 8px rgba(0,0,0,0.065);
+    border-radius: 5px;
+    margin: 50px auto;
+    padding: 50px;
+
+}
+.addcourseForm{
+    margin: 20px;
+}
+.addcourseForm.inputGroup{
+    width:100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+.addcourseForm.inputGroup label{
+    margin-bottom: 5px;
+}
+.addcourseForm.inputGroup input{
+    margin-bottom: 10px;
+    padding: 10px;
+    outline: none;
+}
+
+.addcourseForm.inputGroup button{
+    border:10px;
+    outline: auto;
+    background-color: antiquewhite;
+    color: black;
+    padding: 15px;
+    cursor: pointer;
+}
+
+.addcourse h3{
+    margin: 10px;
+}

@@ -1,0 +1,64 @@
+/* .userTable{
+    width: 60%;
+    background-color: rgb(231, 226, 219);
+    box-shadow: 1px 1px 8px rgba(0,0,0,0.065);
+    border-radius: 5px;
+    margin: 50px auto;
+    padding: 50px;
+
+}
+.addButton{
+    text-decoration: none;
+    background-color: aqua;
+    color: black;
+    font-weight: 500;
+    box-shadow: 1px 1px 8px rgba(0,0,0,0.065);
+    border-radius: 5px;
+    padding: 10px;
+}
+.userTable table{ 
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+
+
+} */
+/* user.css */
+
+.userTable {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  label {
+    margin-right: 8px;
+  }
+  
+  .addCourseButton {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    display: block; /* Ensure the button takes full width */
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Add more styles as needed */
+  
