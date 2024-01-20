@@ -27,12 +27,21 @@ const Edit = () => {
           params: { semesterNumber: semesterNumber }
         });
         const courseToEdit = response.data.courses.find(c => c.course_code === courseCode);
-        setCourse(courseToEdit);
+    
+        if (courseToEdit) {
+          setCourse(courseToEdit);
+        } else {
+          // Handle case when course is not found
+          console.error('Course not found');
+          toast.error('Course not found');
+          navigate('/'); // Redirect to home or error page
+        }
       } catch (error) {
         console.error('Error fetching course data:', error);
         toast.error('Error fetching course data');
       }
     };
+    
 
     fetchCourseData();
   }, [semesterNumber, courseCode]);

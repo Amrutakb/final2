@@ -128,9 +128,7 @@ const User = () => {
                   <button onClick={() => deleteCourse(course.course_code)}>
                     Delete
                   </button>
-                  
-<Link to={`/edit/${selectedSemester}/${course.course_code}`}>Edit</Link>
-
+                  <Link to={`/edit/${selectedSemester}/${course.course_code}`}>Edit</Link>
                 </td>
               </tr>
             ))
