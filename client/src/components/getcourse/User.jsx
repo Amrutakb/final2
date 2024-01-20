@@ -35,6 +35,12 @@ const User = () => {
   const handleTypeChange = (event) => {
     const selectedType = event.target.value;
     setSelectedType(selectedType);
+
+    // Redirect to the appropriate route based on the selected type
+    if (selectedType === "syllabus") {
+      // Redirect to the "/syllabus" route
+      window.location.href = "/syllabus"; // You can use React Router's Link here if you're using BrowserRouter
+    }
   };
 
   useEffect(() => {

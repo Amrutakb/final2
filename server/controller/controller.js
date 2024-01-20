@@ -1,4 +1,5 @@
 import { Scheme } from "../model/model.js";
+import { Syllabus } from "../model/model.js";
 
 
 
@@ -95,3 +96,57 @@ export const deleteCourse = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+// Fetch the entire syllabus for a given semester
+export const getSyllabusBySemester = async (req, res) => {
+    try {
+        const { semesterNumber } = req.query;
+        const syllabus = await Syllabus.findOne({ semester: semesterNumber });
+
+        if (!syllabus) {
+            return res.status(404).json({ msg: "Syllabus for the specified semester not found" });
+        }
+
+        res.status(200).json(syllabus);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Edit and update the syllabus for a given course in a semester
+export const editSyllabus = async (req, res) => {
+    try {
+        console.log(req.body); // Log received data
+        const { semesterNumber, courseCode } = req.params;
+        const syllabusUpdates = req.body;
+
+        // Fetch the syllabus first
+        let syllabus = await Syllabus.findOne({ semester: semesterNumber });
+
+        if (!syllabus) {
+            return res.status(404).json({ msg: "Syllabus for the specified semester not found" });
+        }
+
+        // Find the index of the course within the courses array
+        const courseIndex = syllabus.courses.findIndex(course => course.course_code === courseCode);
+
+        if (courseIndex === -1) {
+            return res.status(404).json({ msg: "Course not found in the syllabus" });
+        }
+
+        // Include `course_name` and `course_code` in the update
+        const { ...remainingUpdates } = syllabusUpdates;
+
+        // Update the course syllabus with the provided changes
+        syllabus.courses[courseIndex] = { ...syllabus.courses[courseIndex], ...remainingUpdates };
+
+        // Save the updated syllabus
+        syllabus = await syllabus.save();
+
+        res.status(200).json({ msg: "Syllabus updated successfully", updatedSyllabus: syllabus });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+

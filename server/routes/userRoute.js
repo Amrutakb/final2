@@ -1,5 +1,5 @@
 import express from "express";
-import { getSchemeBySemester, addCourse, editCourse, deleteCourse } from "../controller/controller.js";
+import { getSchemeBySemester, addCourse, editCourse, deleteCourse ,getSyllabusBySemester,editSyllabus } from "../controller/controller.js";
 
 const router = express.Router();
 
@@ -14,5 +14,8 @@ router.put("/editCourse/:semesterNumber/:courseCode", editCourse);
 
 // Route to delete a course in a semester
 router.delete("/deleteCourse/:semesterNumber/:courseCode", deleteCourse);
+
+router.get("/getSyllabusBySemester", getSyllabusBySemester);
+router.put("/editSyllabus/:semesterNumber/:courseCode", editSyllabus);
 
 export default router;

@@ -37,5 +37,43 @@ const semesterSchema = new mongoose.Schema({
     total: Number
 });
 
+const topicSchema = new mongoose.Schema({
+    topic_number: Number,
+    topic_name: String,
+    content: String,
+    hours: String
+});
+
+const unitSchema = new mongoose.Schema({
+    unit_number: Number,
+    topics: [topicSchema]
+});
+
+
+const syllabuscourseSchema = new mongoose.Schema({
+    course_code: {
+        type: String,
+        required: true
+    },
+    course_name: {
+        type: String,
+        required: true
+    },
+    units: [unitSchema],
+    text_books: [String],
+    reference_books: [String]
+});
+
+
+const syllabusSchema = new mongoose.Schema({
+    semester: {
+        type: Number,
+        required: true
+    },
+    courses: [syllabuscourseSchema]
+});
+
 // Create the model from the schema
 export const Scheme = mongoose.model("Scheme", semesterSchema, "Scheme");
+export const Syllabus = mongoose.model("Syllabus", syllabusSchema, "Syllabus");
+
