@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+// eslint-disable-next-line
+import html2pdf from 'html2pdf.js';
 import './user.css';
 
 const User = () => {
@@ -69,6 +71,41 @@ const User = () => {
     }
   };
 
+  const downloadPDF = () => {
+    // Configuration for html2pdf
+    const pdfOptions = {
+      margin: 10,
+      filename: 'course_table.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+  
+    // Element to be converted to PDF
+    const element = document.getElementById('courseTable');
+  
+    // Remove the last column from the table
+    const lastColumnIndex = element.rows[0].cells.length - 1;
+    for (let i = 0; i < element.rows.length; i++) {
+      element.rows[i].deleteCell(lastColumnIndex);
+    }
+  
+    // Generate PDF after a short delay to ensure full rendering
+    setTimeout(() => {
+      // Generate PDF
+      html2pdf(element, pdfOptions);
+  
+      // Restore the last column after generating PDF
+      for (let i = 0; i < element.rows.length; i++) {
+        const cell = element.rows[i].insertCell(lastColumnIndex);
+        cell.style.display = 'none'; // Hide the cell
+      }
+    }, 1000); // Adjust the delay as needed
+  };
+  
+  
+  
+  
   return (
     <div className="userTable">
       <div>
@@ -90,7 +127,10 @@ const User = () => {
       <Link to="/add" className="addButton">
         Add course
       </Link>
-      <table border={1} cellPadding={10} cellSpacing={0}>
+      <button onClick={downloadPDF} className="downloadButton">
+        Download as PDF
+      </button>
+      <table id="courseTable" border={1} cellPadding={10} cellSpacing={0}>
         {/* Table headers */}
         <thead>
           <tr>
