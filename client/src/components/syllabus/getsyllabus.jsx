@@ -1,4 +1,3 @@
-// syllabus.jsx
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -74,13 +73,7 @@ const GetSyllabus = () => {
         <label htmlFor="semester">Select Semester:</label>
         <select id="semester" value={selectedSemester} onChange={handleSemesterChange}>
           <option value={1}>Semester 1</option>
-          <option value={2}>Semester 2</option>
-          <option value={3}>Semester 3</option>
-          <option value={4}>Semester 4</option>
-          <option value={5}>Semester 5</option>
-          <option value={6}>Semester 6</option>
-          <option value={7}>Semester 7</option>
-          <option value={8}>Semester 8</option>
+          {/* ... (your other options) */}
         </select>
       </div>
       <button onClick={downloadPDF} className="downloadButton">
@@ -92,9 +85,7 @@ const GetSyllabus = () => {
           <tr>
             <th>Course Code</th>
             <th>Course Name</th>
-            <th>Units</th>
-            <th>Text Books</th>
-            <th>Reference Books</th>
+            <th>Topics</th>
             <th>Edit</th> {/* New column for editing */}
           </tr>
         </thead>
@@ -102,21 +93,56 @@ const GetSyllabus = () => {
         <tbody>
           {syllabus.length > 0 ? (
             syllabus.map((course) => (
-              <tr key={course._id}>
-                <td>{course.course_code}</td>
-                <td>{course.course_name}</td>
-                <td>{course.units.length}</td>
-                <td>{course.text_books.join(', ')}</td>
-                <td>{course.reference_books.join(', ')}</td>
-                <td>
-                  {/* Edit button or link */}
-                  <Link to={`/edit-course/${selectedSemester}/${course.course_code}`}>Edit</Link>
-                </td>
-              </tr>
+              <React.Fragment key={course._id}>
+                {/* Course Code and Course Name */}
+                <tr>
+                  <td>{course.course_code}</td>
+                  <td>{course.course_name}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <Link to={`/edit-course/${selectedSemester}/${course.course_code}`}>Edit</Link>
+                  </td>
+                </tr>
+                {/* Units */}
+                {course.units.map((unit, unitIndex) => (
+                  <tr key={`${course._id}_unit_${unit.unit_number}`}>
+                    <td colSpan="9">Unit - {unit.unit_number}</td>
+                  </tr>
+                ))}
+                {/* Topics */}
+                {course.units.map((unit) =>
+                  unit.topics.map((topic) => (
+                    <tr key={`${course._id}_topic_${topic.topic_number}`}>
+                      <td></td>
+                      <td></td>
+                      <td>{topic.topic_number}</td>
+                      <td>{topic.topic_name}</td>
+                      <td>{topic.content}</td>
+                      <td>{topic.hours}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  ))
+                )}
+                {/* Text Books */}
+                <tr>
+                  <td colSpan="9">Text Books: {course.text_books.join(', ')}</td>
+                </tr>
+                {/* Reference Books */}
+                <tr>
+                  <td colSpan="9">Reference Books: {course.reference_books.join(', ')}</td>
+                </tr>
+              </React.Fragment>
             ))
           ) : (
             <tr>
-              <td colSpan="6">No syllabus available.</td>
+              <td colSpan="9">No syllabus available.</td>
             </tr>
           )}
         </tbody>
