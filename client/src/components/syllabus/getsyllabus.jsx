@@ -104,7 +104,13 @@ const GetSyllabus = () => {
     }, 1000); // Adjust the delay as needed
   };
   
-  
+  //integration part
+  const generateChangeSummary = () => {
+    // Navigate to the ChangeSummary component
+    // You may use a library like react-router-dom for navigation
+    // For simplicity, we'll use window.location.href in this example
+    window.location.href = '/change-summary';
+  };
   
   
 
@@ -127,59 +133,63 @@ const GetSyllabus = () => {
         Download as PDF
       </button>
       <table id="syllabusTable" border={1} cellPadding={10} cellSpacing={0}>
-        <thead>
-          <tr>
-            <th>Course Code</th>
-            <th>Course Name</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {syllabus.length > 0 ? (
-            syllabus.map((course) => (
-              <React.Fragment key={course._id}>
-                <tr>
-                  <td>{course.course_code}</td>
-                  <td>{course.course_name}</td>
-                  <td>
-                    <Link to={`/editSyllabus/${selectedSemester}/${course.course_code}`}>
-                      Edit Syllabus
-                    </Link>
-                  </td>
-                </tr>
-  
-                {course.units.map((unit, unitIndex) => (
-                  <React.Fragment key={`${course._id}_unit_${unitIndex}`}>
-                    <tr>
-                      <td colSpan="3">{`Unit - ${unit.unit_number}`}</td>
+      <thead>
+        <tr>
+          <th>Course Code</th>
+          <th>Course Name</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {syllabus.length > 0 ? (
+          syllabus.map((course) => (
+            <React.Fragment key={course._id}>
+              <tr>
+                <td>{course.course_code}</td>
+                <td>{course.course_name}</td>
+                <td>
+                  <Link to={`/editSyllabus/${selectedSemester}/${course.course_code}`}>
+                    Edit Syllabus
+                  </Link>
+                </td>
+              </tr>
+
+              {course.units.map((unit, unitIndex) => (
+                <React.Fragment key={`${course._id}_unit_${unitIndex}`}>
+                  <tr>
+                    <td colSpan="3">{`Unit - ${unit.unit_number}`}</td>
+                  </tr>
+                  {unit.topics.map((topic, topicIndex) => (
+                    <tr key={`${course._id}_topic_${topicIndex}`}>
+                      <td>{topic.topic_number}</td>
+                      <td>{topic.topic_name}</td>
+                      <td colSpan="1">{topic.content}</td>
+                      <td>{`Hours: ${topic.hours}`}</td>
                     </tr>
-                    {unit.topics.map((topic, topicIndex) => (
-                      <tr key={`${course._id}_topic_${topicIndex}`}>
-                        <td>{topic.topic_number}</td>
-                        <td>{topic.topic_name}</td>
-                        <td>{topic.content}<br />{`Hours: ${topic.hours}`}</td>
-                      </tr>
-                    ))}
-                  </React.Fragment>
-                ))}
-  
-                <tr>
-                  <td colSpan="3">Text Books: {course.text_books ? course.text_books.join(', ') : 'N/A'}</td>
-                </tr>
-  
-                <tr>
-                  <td colSpan="3">Reference Books: {course.reference_books ? course.reference_books.join(', ') : 'N/A'}</td>
-                </tr>
-              </React.Fragment>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="3">No syllabus available.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
-  }
+                  ))}
+                </React.Fragment>
+              ))}
+
+              <tr>
+                <td colSpan="3">Text Books: {course.text_books ? course.text_books.join(', ') : 'N/A'}</td>
+              </tr>
+
+              <tr>
+                <td colSpan="3">Reference Books: {course.reference_books ? course.reference_books.join(', ') : 'N/A'}</td>
+              </tr>
+            </React.Fragment>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="3">No syllabus available.</td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+    <button onClick={generateChangeSummary} className="changeSummaryButton">
+        Generate Change Summary
+      </button>
+  </div>
+);
+        }
 export default GetSyllabus;  
