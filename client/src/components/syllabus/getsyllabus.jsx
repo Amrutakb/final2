@@ -80,7 +80,7 @@ const GetSyllabus = () => {
           <option value={6}>Semester 6</option>
           <option value={7}>Semester 7</option>
           <option value={8}>Semester 8</option>
-          </select>
+        </select>
       </div>
       <button onClick={downloadPDF} className="downloadButton">
         Download as PDF
@@ -108,10 +108,10 @@ const GetSyllabus = () => {
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td rowSpan="100">{course.text_books.join(', ')}</td>
-                  <td rowSpan="100">{course.reference_books.join(', ')}</td>
+                  {/* <td rowSpan="100">{course.text_books?.join(', ')}</td>
+                  <td rowSpan="100">{course.reference_books?.join(', ')}</td> */}
                   <td>
-                    <Link to={`/edit-course/${selectedSemester}/${course.course_code}`}>Edit</Link>
+                    <Link to={`/editSyllabus/${selectedSemester}/${course.course_code}`}>Edit Syllabus</Link>
                   </td>
                 </tr>
                 {/* Units and Topics */}
@@ -136,11 +136,11 @@ const GetSyllabus = () => {
                 ))}
                 {/* Text Books */}
                 <tr>
-                  <td colSpan="9">Text Books: {course.text_books.join(', ')}</td>
+                  <td colSpan="9">Text Books: {course.text_books ? course.text_books.join(', ') : 'N/A'}</td>
                 </tr>
                 {/* Reference Books */}
                 <tr>
-                  <td colSpan="9">Reference Books: {course.reference_books.join(', ')}</td>
+                  <td colSpan="9">Reference Books: {course.reference_books ? course.reference_books.join(', ') : 'N/A'}</td>
                 </tr>
               </React.Fragment>
             ))

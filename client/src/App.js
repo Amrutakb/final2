@@ -4,7 +4,7 @@ import User from './components/getcourse/User';
 import Add from './components/addcourse/Add';
 import Edit from './components/updatecourse/edit';
 import GetSyllabus from './components/Syllabus/getsyllabus';
-
+import EditSyllabus from './components/Syllabus/editsyllabus';
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
           <Route path="/add" element={<Add />} />
           <Route path="/edit/:semesterNumber/:courseCode" element={<Edit />} />
           <Route path="/syllabus" element={<GetSyllabus />} />
+          <Route path="/editSyllabus/:semesterNumber/:courseCode" element={<EditSyllabus />} />
         </Routes>
       </Router>
     </div>
