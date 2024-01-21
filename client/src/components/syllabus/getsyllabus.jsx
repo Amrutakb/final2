@@ -42,30 +42,71 @@ const GetSyllabus = () => {
       filename: 'syllabus_table.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
     };
-
+  
     // Element to be converted to PDF
     const element = document.getElementById('syllabusTable');
-
+  
+    // Create thead element if not already present
+    let thead = element.querySelector('thead');
+    if (!thead) {
+      thead = document.createElement('thead');
+      element.appendChild(thead);
+    }
+  
+    // Add rows for Course Code, Course Name, and Unit Numbers at the beginning
+    const headerRow = thead.insertRow(0);
+  
+    const courseCodeCell = headerRow.insertCell(0);
+    const courseNameCell = headerRow.insertCell(1);
+    const unitNumbersCell = headerRow.insertCell(2);
+  
+    courseCodeCell.textContent = 'Course Code';
+    courseNameCell.textContent = 'Course Name';
+    unitNumbersCell.textContent = 'Unit Numbers';
+  
     // Remove the last column from the table
     const lastColumnIndex = element.rows[0].cells.length - 1;
     for (let i = 0; i < element.rows.length; i++) {
-      element.rows[i].deleteCell(lastColumnIndex);
+      if (element.rows[i].cells.length > lastColumnIndex) {
+        element.rows[i].deleteCell(lastColumnIndex);
+      }
     }
-
+  
+    // Add rows for each topic's content
+    const topics = element.querySelectorAll('tbody td[data-topic-content]');
+    topics.forEach((topic) => {
+      const rowIndex = topic.parentElement.rowIndex;
+      const contentRow = element.insertRow(rowIndex + 1);
+      const contentCell = contentRow.insertCell(0);
+      contentCell.colSpan = element.rows[0].cells.length;
+      contentCell.textContent = topic.getAttribute('data-topic-content');
+    });
+  
     // Generate PDF after a short delay to ensure full rendering
     setTimeout(() => {
       // Generate PDF
       html2pdf(element, pdfOptions);
-
+  
       // Restore the last column after generating PDF
       for (let i = 0; i < element.rows.length; i++) {
         const cell = element.rows[i].insertCell(lastColumnIndex);
         cell.style.display = 'none'; // Hide the cell
       }
+  
+      // Remove the added header row
+      thead.deleteRow(0);
+  
+      // Remove the added content rows
+      const contentRows = element.querySelectorAll('tbody tr[data-content-row]');
+      contentRows.forEach((row) => row.remove());
     }, 1000); // Adjust the delay as needed
   };
+  
+  
+  
+  
 
   return (
     <div className="syllabusTable">
@@ -86,73 +127,59 @@ const GetSyllabus = () => {
         Download as PDF
       </button>
       <table id="syllabusTable" border={1} cellPadding={10} cellSpacing={0}>
-        {/* Table headers */}
         <thead>
           <tr>
             <th>Course Code</th>
             <th>Course Name</th>
-            <th>Edit</th> {/* New column for editing */}
+            <th>Edit</th>
           </tr>
         </thead>
-        {/* Table body */}
         <tbody>
           {syllabus.length > 0 ? (
             syllabus.map((course) => (
               <React.Fragment key={course._id}>
-                {/* Course Code and Course Name */}
                 <tr>
                   <td>{course.course_code}</td>
                   <td>{course.course_name}</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  {/* <td rowSpan="100">{course.text_books?.join(', ')}</td>
-                  <td rowSpan="100">{course.reference_books?.join(', ')}</td> */}
                   <td>
-                    <Link to={`/editSyllabus/${selectedSemester}/${course.course_code}`}>Edit Syllabus</Link>
+                    <Link to={`/editSyllabus/${selectedSemester}/${course.course_code}`}>
+                      Edit Syllabus
+                    </Link>
                   </td>
                 </tr>
-                {/* Units and Topics */}
-                {course.units.map((unit) => (
-                  <React.Fragment key={`${course._id}_unit_${unit.unit_number}`}>
+  
+                {course.units.map((unit, unitIndex) => (
+                  <React.Fragment key={`${course._id}_unit_${unitIndex}`}>
                     <tr>
-                      <td colSpan="2"></td>
-                      <td colSpan="2">Unit - {unit.unit_number}</td>
-                      <td colSpan="5"></td>
+                      <td colSpan="3">{`Unit - ${unit.unit_number}`}</td>
                     </tr>
-                    {unit.topics.map((topic) => (
-                      <tr key={`${course._id}_topic_${topic.topic_number}`}>
-                        <td colSpan="4"></td>
+                    {unit.topics.map((topic, topicIndex) => (
+                      <tr key={`${course._id}_topic_${topicIndex}`}>
                         <td>{topic.topic_number}</td>
                         <td>{topic.topic_name}</td>
-                        <td>{topic.content}</td>
-                        <td>{topic.hours}</td>
-                        <td></td>
+                        <td>{topic.content}<br />{`Hours: ${topic.hours}`}</td>
                       </tr>
                     ))}
                   </React.Fragment>
                 ))}
-                {/* Text Books */}
+  
                 <tr>
-                  <td colSpan="9">Text Books: {course.text_books ? course.text_books.join(', ') : 'N/A'}</td>
+                  <td colSpan="3">Text Books: {course.text_books ? course.text_books.join(', ') : 'N/A'}</td>
                 </tr>
-                {/* Reference Books */}
+  
                 <tr>
-                  <td colSpan="9">Reference Books: {course.reference_books ? course.reference_books.join(', ') : 'N/A'}</td>
+                  <td colSpan="3">Reference Books: {course.reference_books ? course.reference_books.join(', ') : 'N/A'}</td>
                 </tr>
               </React.Fragment>
             ))
           ) : (
             <tr>
-              <td colSpan="9">No syllabus available.</td>
+              <td colSpan="3">No syllabus available.</td>
             </tr>
           )}
         </tbody>
       </table>
     </div>
   );
-};
-
-export default GetSyllabus;
+  }
+export default GetSyllabus;  
