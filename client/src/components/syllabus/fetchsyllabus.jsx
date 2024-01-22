@@ -48,61 +48,28 @@ const GetSyllabus = () => {
     // Element to be converted to PDF
     const element = document.getElementById('syllabusTable');
   
-    // Create thead element if not already present
-    let thead = element.querySelector('thead');
-    if (!thead) {
-      thead = document.createElement('thead');
-      element.appendChild(thead);
-    }
+    // Create a clone of the table for manipulation
+    const clonedTable = element.cloneNode(true);
   
-    // Add rows for Course Code, Course Name, and Unit Numbers at the beginning
-    const headerRow = thead.insertRow(0);
-  
-    const courseCodeCell = headerRow.insertCell(0);
-    const courseNameCell = headerRow.insertCell(1);
-    const unitNumbersCell = headerRow.insertCell(2);
-  
-    courseCodeCell.textContent = 'Course Code';
-    courseNameCell.textContent = 'Course Name';
-    unitNumbersCell.textContent = 'Unit Numbers';
-  
-    // Remove the last column from the table
-    const lastColumnIndex = element.rows[0].cells.length - 1;
-    for (let i = 0; i < element.rows.length; i++) {
-      if (element.rows[i].cells.length > lastColumnIndex) {
-        element.rows[i].deleteCell(lastColumnIndex);
-      }
-    }
-  
-    // Add rows for each topic's content
-    const topics = element.querySelectorAll('tbody td[data-topic-content]');
+    // Add rows for each topic's content in the cloned table
+    const topics = clonedTable.querySelectorAll('tbody td[data-topic-content]');
     topics.forEach((topic) => {
       const rowIndex = topic.parentElement.rowIndex;
-      const contentRow = element.insertRow(rowIndex + 1);
+      const contentRow = clonedTable.insertRow(rowIndex + 1);
       const contentCell = contentRow.insertCell(0);
-      contentCell.colSpan = element.rows[0].cells.length;
+      contentCell.colSpan = clonedTable.rows[0].cells.length;
       contentCell.textContent = topic.getAttribute('data-topic-content');
     });
   
-    // Generate PDF after a short delay to ensure full rendering
+    // Generate PDF using the cloned table after a short delay to ensure full rendering
     setTimeout(() => {
       // Generate PDF
-      html2pdf(element, pdfOptions);
-  
-      // Restore the last column after generating PDF
-      for (let i = 0; i < element.rows.length; i++) {
-        const cell = element.rows[i].insertCell(lastColumnIndex);
-        cell.style.display = 'none'; // Hide the cell
-      }
-  
-      // Remove the added header row
-      thead.deleteRow(0);
-  
-      // Remove the added content rows
-      const contentRows = element.querySelectorAll('tbody tr[data-content-row]');
-      contentRows.forEach((row) => row.remove());
+      html2pdf(clonedTable, pdfOptions);
     }, 1000); // Adjust the delay as needed
   };
+  
+  
+  
   
   //integration part
   const generateChangeSummary = () => {
